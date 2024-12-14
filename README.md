@@ -1,6 +1,4 @@
-﻿# WebPrint
-
-[Windows 在线共享打印机](https://github.com/NewFuture/WebPrint)
+﻿# WebPrint_New
 
 a simple website to share your windows printers to others via web browsers.
 
@@ -63,7 +61,7 @@ Windows 系统包含IIS功能,但默认关闭，需要手动打开。
 
 ## 截图
 
-![截图](file/screenshot.png)
+
 
 ## LICENSE
 
