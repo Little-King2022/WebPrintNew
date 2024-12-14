@@ -20,7 +20,7 @@ public partial class Print : System.Web.UI.Page
     /// </summary>
     string LOG_DIR
     {
-        get { return Server.MapPath("~/file/"); }
+        get { return Server.MapPath("~/log/"); }
     }
 
     /// <summary>
@@ -118,7 +118,7 @@ public partial class Print : System.Web.UI.Page
             }
             else
             {
-                msg += "<div style='color:green;'>" + file.FileName + "打印失败</div>";
+                msg += "<div style='color:green;'>" + file.FileName + "文件上传失败</div>";
             }
         }
         return msg;
@@ -151,7 +151,7 @@ public partial class Print : System.Web.UI.Page
         {
             //保存并打印上传文件
             Random r = new Random();
-            string path = FIlE_DIR + DateTime.UtcNow.ToString("MM-dd_HH-mm-ss_") + r.Next().ToString() + GetType(file.FileName);
+            string path = FIlE_DIR + DateTime.Now.ToString("MM-dd_HH-mm-ss_") + r.Next().ToString() + GetType(file.FileName);
             file.SaveAs(path);
             //打印
             return print(path, copies, range, type);
@@ -197,25 +197,27 @@ public partial class Print : System.Web.UI.Page
     protected bool print(string path, int copies = 1, string range = null, string type = ".pdf")
     {
         string cmd, param;
-        switch (type)
-        {
-            case ".pdf":
-            case ".jpg":
-            case ".png":
-            case ".tiff":
-                //pdf
-                // https://www.sumatrapdfreader.org/docs/Command-line-arguments.html
-                cmd = Server.MapPath("~/bin/") + "SumatraPDF.exe";
-                param = string.Format("-print-to-default -silent -print-settings \"{0}x,{1}\"  -appdata \"{3}\" \"{2}\"", copies, range, path, FIlE_DIR);
-                copies = 1;
-                break;
+        // 确保文件路径包含引号（以防路径中有空格）
+    string quotedPath = "\"" + path + "\"";
 
-            default:
-                //word
-                cmd = "write";
-                param = string.Format("/p \"{0}\"", path);
-                break;
-        }
+    switch (type)
+    {
+        case ".pdf":
+        case ".jpg":
+        case ".png":
+        case ".tiff":
+            // PDF 或图片类型，使用 SumatraPDF 打印
+            // https://www.sumatrapdfreader.org/docs/Command-line-arguments.html
+            cmd = Server.MapPath("~/bin/") + "SumatraPDF.exe";
+            param = string.Format("-print-to \"HP LaserJet Pro M402-M403 PCL 6\" -silent -print-settings \"{0}x,{1}\" {2}", copies, range, quotedPath);
+            break;
+
+        default:
+            // 默认处理 Word 文件，使用外部打印程序
+            cmd = Server.MapPath("~/bin/print_doc/") + "print_doc.exe";
+            param = string.Format("{0} {1}", quotedPath, copies);
+            break;
+    }
         try
         {
             var process = new Process
@@ -232,20 +234,16 @@ public partial class Print : System.Web.UI.Page
             };
             process.OutputDataReceived += async (s, e) => await log(e.Data, "log");
             process.ErrorDataReceived += async (s, e) => await log(e.Data, "error");
-            while (copies-- > 0)
-            {
-                process.Start();
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
-                process.WaitForExit();
-            }
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+            process.WaitForExit();
+            
             return true;
         }
         catch (Exception ex)
         {
-            Console.Write(ex.ToString());
             this.log(ex.ToString(), "exception");
-
         }
         return false;
     }

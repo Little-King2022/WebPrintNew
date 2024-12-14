@@ -52,8 +52,7 @@
             var file = files[i];
             Output(
 				"<p>文件: <strong>" + file.name + "</strong><br/>" +
-				" [<samll>" + file.size + "</samll> bytes]" +
-				" 类型: <samll>" + (file.type || "未知") + "</samll></p>"
+				"大小: <samll>" + (file.size / 1024 / 1024).toFixed(2)  + "</samll> MB" + "</p>"
 			);
         });
         if (upfiles.length > 0) {
@@ -62,7 +61,7 @@
         } else {
             $id("files").value = "";
             $id("submit").disabled = true;
-            Output('<span class="uploadtip">点击上传文件<br/>或者拖拽至此<br/>支持多个文件</span>');
+            Output('<span class="uploadtip">点击上传文件<br/>或拖拽至此<br/>支持多个文件</span>');
         }
     }
 

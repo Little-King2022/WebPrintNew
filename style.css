@@ -14,7 +14,7 @@ ol, ul {
 }
 
 body {
-    background: #00BCD4;
+    background:#dddddd;
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
@@ -49,18 +49,20 @@ h2 {
     display: inline-flex;
     width: 100%;
     justify-content: center;
-    line-height: 1.8em;
+    padding: 10px auto 10px;
 }
 
 .warn {
     text-align: center;
     color: greenyellow;
+    padding: 10px auto 10px;
 }
 
 #messages {
     font-size: 1.2em;
     font-weight: 700;
     text-align: center;
+    margin: 10px auto -12px;
 }
 
 .header {
@@ -68,7 +70,7 @@ h2 {
     color: #FFF;
     font-size: 15px;
     color: floralwhite;
-    background: rgba(233, 30, 99, 0.6);
+    background: rgb(25 163 255);
 }
 
 .listtype li {
@@ -152,7 +154,7 @@ h3 {
     text-align: center;
     padding: 25px 0;
     margin: 25px 0;
-    color: #f3c500;
+    color: #474747;
     border: 2px dashed #f3c500;
     border-radius: 0px;
     -webkit-border-radius: 0px;
@@ -165,7 +167,8 @@ h3 {
 
     #filedrag p {
         text-align: left;
-        padding-left: 2em;
+        padding-left: 1em;
+        font-size: 13px;
     }
 
     #filedrag .hover,
